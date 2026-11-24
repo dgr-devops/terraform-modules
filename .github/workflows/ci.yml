@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: fmt, validate y tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.15.9"
+      - name: Versión de Terraform
+        run: terraform version
+      - name: Formato
+        run: make fmt
+      - name: Validar módulos y ejemplos
+        run: make validate
+      - name: Tests con proveedor simulado
+        run: make test
+
+  tflint:
+    name: tflint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.66.0
+      - name: Versión de tflint
+        run: tflint --version
+      - name: Analizar
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: make lint
+
+  trivy:
+    name: trivy config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Analizar configuración (imagen oficial)
+        run: make security
