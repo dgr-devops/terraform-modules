@@ -113,7 +113,7 @@ Legend:
 
 ## Qué está verificado y qué no
 
-**Verificado** (comandos de arriba, ejecutados en local; el workflow de CI aún no se ha ejecutado en GitHub porque el repositorio no está publicado):
+**Verificado** (comandos de arriba, ejecutados en local y en GitHub Actions, donde los tres jobs del CI pasan en verde):
 - Formato (`terraform fmt -check`), `init -backend=false` y `validate` en 3 módulos y 4 ejemplos.
 - 15 tests offline con proveedor simulado: valores por defecto seguros, conteos de recursos, validaciones que rechazan entradas peligrosas (SSH abierto al mundo, CIDR o AMI mal formados, nombre de bucket inválido).
 - `tflint` sin hallazgos y `trivy config` sin hallazgos pendientes; los tres ignorados explícitamente están justificados en [`docs/decisiones.md`](docs/decisiones.md).
